@@ -1,5 +1,7 @@
 ---
 import "../styles/global.css";
+
+const navArray = ['Basiliere', 'Plachenko', 'Wood']
 ---
 
 <html lang="en">
@@ -11,6 +13,9 @@ import "../styles/global.css";
 		<title>Astro</title>
 	</head>
 	<body>
+		<div class="navbar bg-base-100 shadow-sm">
+			{navArray.map((name) => <a class="btn btn-ghost text-xl">{name}</a>)}
+		</div>
     <slot />
 	</body>
 </html>
