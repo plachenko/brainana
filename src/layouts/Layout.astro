@@ -1,7 +1,7 @@
 ---
 import "../styles/global.css";
+import Navbar from "../components/astro/Navbar.astro";
 
-const navArray = ['Basiliere', 'Plachenko', 'Wood']
 ---
 
 <html lang="en">
@@ -13,9 +13,16 @@ const navArray = ['Basiliere', 'Plachenko', 'Wood']
 		<title>Astro</title>
 	</head>
 	<body>
-		<div class="navbar bg-base-100 shadow-sm">
-			{navArray.map((name) => <a class="btn btn-ghost text-xl">{name}</a>)}
-		</div>
-    <slot />
+    <div class="bg-green-300 h-full w-full flex flex-col">
+      <div>
+      <Navbar>
+      </div>
+
+      <div class="flex-1 bg-blue-300">
+        <slot />
+      </div>
+
+    </div>
+
 	</body>
 </html>
