@@ -6,3 +6,8 @@
 html, body{
   height: 100%;
 }
+
+.special-flex {
+  flex: 1 1 auto;
+  height: 0px;
+}
