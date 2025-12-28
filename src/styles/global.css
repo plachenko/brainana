@@ -1,7 +1,12 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
   themes: light --default, dark --prefersdark, halloween;
 }
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html, body{
   height: 100%;
@@ -10,4 +15,31 @@ html, body{
 .special-flex {
   flex: 1 1 auto;
   height: 0px;
+}
+
+@layer base {
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+  }
+  h2 {
+    font-size: 2rem;
+    font-weight: 500;
+  }
+  h3 {
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+  h4 {
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+  h5 {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+  h6 {
+    font-size: 1rem;
+    font-weight: 500;
+  }
 }
