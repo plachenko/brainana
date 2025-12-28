@@ -76,11 +76,7 @@ export default function AI() {
           continue;
         }
 
-        if (newText === "") {
-          newText = text;
-        } else {
-          newText += " " + text;
-        }
+        newText += text;
       }
 
       console.log(newText);
@@ -104,7 +100,7 @@ export default function AI() {
       });
 
       setChatContents((prev) => [...prev, ...newChatContents]);
-      //   setPrompt("");
+      setPrompt("");
     } catch (e) {
       const newChatContents = [
         {
@@ -133,10 +129,16 @@ export default function AI() {
 
   return (
     <div className="flex flex-col h-full">
-      <div ref={thinkingRef} className="hidden items-center max-w-[1000px] m-auto h-full overflow-y-scroll">
+      <div
+        ref={thinkingRef}
+        className="hidden items-center max-w-[1000px] m-auto h-full overflow-y-scroll"
+      >
         <div>Thinking...</div>
       </div>
-      <div ref={containerRef} className="special-flex max-w-[1000px] m-auto h-full overflow-y-scroll">
+      <div
+        ref={containerRef}
+        className="special-flex max-w-[1000px] m-auto h-full overflow-y-scroll"
+      >
         {chatContents.map((obj, index) => {
           if (obj.tag === "h6") {
             if (index === 0) {
