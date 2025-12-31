@@ -1,15 +1,15 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, ThinkingLevel } from "@google/genai";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function AI() {
-  const [apiKey, setApiKey] = useState("");
-  const [prompt, setPrompt] = useState("");
-  const [fullResponseText, setFullResponseText] = useState("");
-  const thinkingRef = useRef(null);
-  const containerRef = useRef(null);
+  const [apiKey, setApiKey] = useState<string>("");
+  const [prompt, setPrompt] = useState<string>("");
+  const [fullResponseText, setFullResponseText] = useState<string>("");
+  const thinkingRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -17,7 +17,7 @@ export default function AI() {
     }
   }, [fullResponseText]);
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     if (apiKey.trim() === "" || prompt.trim() === "") {
@@ -25,8 +25,12 @@ export default function AI() {
     }
 
     //Show thinking div
-    containerRef.current.classList.replace("special-flex", "hidden");
-    thinkingRef.current.classList.replace("hidden", "flex");
+    if (containerRef.current) {
+      containerRef.current.classList.replace("special-flex", "hidden");
+    }
+    if (thinkingRef.current) {
+      thinkingRef.current.classList.replace("hidden", "flex");
+    }
 
     const ai = new GoogleGenAI({
       apiKey: apiKey,
@@ -38,7 +42,7 @@ export default function AI() {
     ];
     const config = {
       thinkingConfig: {
-        thinkingLevel: "HIGH",
+        thinkingLevel: ThinkingLevel.HIGH,
       },
       tools,
     };
@@ -65,10 +69,22 @@ export default function AI() {
       for await (const chunk of response) {
         // console.log(chunk);
 
-        // if (chunk.candidates.length === 0 || chunk.candidates.length > 1) debugger;
-        // if (chunk.candidates[0].content.role != "model") debugger;
-        // if (chunk.candidates[0].content.parts.length === 0 || chunk.candidates[0].content.parts.length > 1) debugger;
-        // if (!chunk.candidates[0].content.parts[0].text) debugger;
+        if (!chunk || !chunk.candidates) continue;
+        if (chunk.candidates.length === 0 || chunk.candidates.length > 1)
+          continue;
+        if (
+          !chunk.candidates[0].content ||
+          !chunk.candidates[0].content.role ||
+          !chunk.candidates[0].content.parts
+        )
+          continue;
+        if (chunk.candidates[0].content.role != "model") continue;
+        if (
+          chunk.candidates[0].content.parts.length === 0 ||
+          chunk.candidates[0].content.parts.length > 1
+        )
+          continue;
+        if (!chunk.candidates[0].content.parts[0].text) continue;
 
         const text = chunk.candidates[0].content.parts[0].text;
 
@@ -95,17 +111,21 @@ export default function AI() {
       setPrompt("");
     } catch (e) {
       if (fullResponseText === "") {
-        setFullResponseText("## There was an error: \n\n" + newText);
+        setFullResponseText("## There was an error: \n\n" + e);
       } else {
         setFullResponseText(
-          (prevText) => prevText + " \n\n## There was an error: \n\n" + newText
+          (prevText) => prevText + " \n\n## There was an error: \n\n" + e
         );
       }
     }
 
     //Hide thinking
-    containerRef.current.classList.replace("hidden", "special-flex");
-    thinkingRef.current.classList.replace("flex", "hidden");
+    if (containerRef.current) {
+      containerRef.current.classList.replace("hidden", "special-flex");
+    }
+    if (thinkingRef.current) {
+      thinkingRef.current.classList.replace("flex", "hidden");
+    }
   }
 
   return (
@@ -124,13 +144,20 @@ export default function AI() {
           components={{
             pre: ({ children }) => <>{children}</>,
             code(props) {
-              const { children, className, node, ...rest } = props;
+              const { children, className, node, ref, ...rest } = props;
               const match = /language-(\w+)/.exec(className || "");
               const codeText = String(children).replace(/\n$/, "");
 
               return match ? (
                 <>
-                  <div className="flex mt-[10px]" style={{background: "rgb(30, 30, 30)", color: "#fff", padding: "1em 1em 0 1em"}}>
+                  <div
+                    className="flex mt-[10px]"
+                    style={{
+                      background: "rgb(30, 30, 30)",
+                      color: "#fff",
+                      padding: "1em 1em 0 1em",
+                    }}
+                  >
                     <div className="inline-block text-left w-full">
                       {match[1]}
                     </div>
@@ -139,7 +166,7 @@ export default function AI() {
                         type="button"
                         className="btn"
                         onClick={(e) => {
-                          const button = e.target;
+                          const button = e.target as HTMLElement;
                           navigator.clipboard.writeText(codeText);
                           button.innerHTML = "Copied";
                           setTimeout(() => {
@@ -157,7 +184,7 @@ export default function AI() {
                     language={match[1]}
                     style={vscDarkPlus}
                     PreTag="div"
-                    customStyle={{marginTop: "0px", paddingTop: "0px"}}
+                    customStyle={{ marginTop: "0px", paddingTop: "0px" }}
                   />
                 </>
               ) : (
