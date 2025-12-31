@@ -26,5 +26,8 @@
     "svelte": "^5.46.0",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/react-syntax-highlighter": "^15.5.13"
   }
 }

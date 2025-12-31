@@ -1,7 +1,7 @@
 import {BrowserRouter, Routes, Route, Link} from 'react-router-dom';
 
-import AI from "./AI.jsx";
-import Placeholder from "./Placeholder.jsx";
+import AI from "./AI.tsx";
+import Placeholder from "./Placeholder.tsx";
 
 export default function Main() {
     return (
