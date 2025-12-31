@@ -2,7 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export default function AI() {
   const [apiKey, setApiKey] = useState("");
@@ -118,49 +118,46 @@ export default function AI() {
       </div>
       <div
         ref={containerRef}
-        className="special-flex max-w-[1000px] m-auto h-full overflow-y-scroll"
+        className="special-flex max-w-[1000px] m-auto h-full overflow-y-scroll pb-[20px]"
       >
         <ReactMarkdown
           components={{
+            pre: ({ children }) => <>{children}</>,
             code(props) {
               const { children, className, node, ...rest } = props;
               const match = /language-(\w+)/.exec(className || "");
+              const codeText = String(children).replace(/\n$/, "");
 
               return match ? (
                 <>
+                  <div className="code-header flex mt-[10px]" style={{background: "rgb(30, 30, 30)", color: "#fff", padding: "1em 1em 0 1em"}}>
+                    <div className="inline-block text-left w-full">
+                      {match[1]}
+                    </div>
+                    <div className="inline-block text-right w-full ">
+                      <button
+                        type="button"
+                        className="btn"
+                        onClick={(e) => {
+                          const button = e.target;
+                          navigator.clipboard.writeText(codeText);
+                          button.innerHTML = "Copied";
+                          setTimeout(() => {
+                            button.innerHTML = "Copy";
+                          }, 1000);
+                        }}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                  </div>
                   <SyntaxHighlighter
                     {...rest}
-                    children={String(children).replace(/\n$/, "")}
+                    children={codeText}
                     language={match[1]}
-                    style={dracula}
-                    PreTag={({ ...props }) => {
-                      return (
-                        <div {...props}>
-                          <div className="code-header flex">
-                            <div className="inline-block text-left w-full">
-                              {match[1]}
-                            </div>
-                            <div className="inline-block text-right w-full ">
-                              <button
-                                type="button"
-                                className="btn"
-                                onClick={(e) => {
-                                    const button = e.target;
-                                    navigator.clipboard.writeText(String(children).replace(/\n$/, ""));
-                                    button.innerHTML = "Copied";
-                                    setTimeout(() => {
-                                        button.innerHTML = "Copy";
-                                    }, 1000);
-                                }}
-                              >
-                                Copy
-                              </button>
-                            </div>
-                          </div>
-                          {children}
-                        </div>
-                      );
-                    }}
+                    style={vscDarkPlus}
+                    PreTag="div"
+                    customStyle={{marginTop: "0px", paddingTop: "0px"}}
                   />
                 </>
               ) : (
