@@ -130,7 +130,7 @@ export default function AI() {
 
               return match ? (
                 <>
-                  <div className="code-header flex mt-[10px]" style={{background: "rgb(30, 30, 30)", color: "#fff", padding: "1em 1em 0 1em"}}>
+                  <div className="flex mt-[10px]" style={{background: "rgb(30, 30, 30)", color: "#fff", padding: "1em 1em 0 1em"}}>
                     <div className="inline-block text-left w-full">
                       {match[1]}
                     </div>
