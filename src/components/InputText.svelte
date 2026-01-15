@@ -1,20 +1,34 @@
 <script>
   import OpenAI from "openai";
+  import { connect, setKey, chat, vision } from "$lib/OpenAI";
+
   import { onMount } from "svelte";
 
-  const models = $state(["OpenAI"]);
+  let { customEvt, num } = $props();
+  const models = $state(["OpenAI", "Gemeni"]);
+  let apiKey = $state(null);
 
-  let curModel = $state(null);
+  let curModel = $state(0);
+  let checkingKey = $state(false);
+
+  async function checkKey() {
+    console.log("checking key", apiKey);
+    // connect(apiKey);
+    // customEvt();
+    console.log(customEvt);
+  }
 
   onMount(() => {
-    curModel = models.length > 1 ? null : 0;
+    console.log(num);
+    num++;
+    console.log(num);
   });
 </script>
 
 <div class="flex gap-1 w-full p-2">
   <!-- change popover-1 and --anchor-1 names. Use unique names for each dropdown -->
   <button class="btn" popovertarget="popover-1" style="anchor-name:--anchor-1">
-    Button
+    {models[curModel]}
   </button>
   <ul
     class="dropdown menu w-52 rounded-box bg-base-100 shadow-sm"
@@ -22,7 +36,7 @@
     id="popover-1"
     style="position-anchor:--anchor-1"
   >
-    <li><a>Item 1</a></li>
+    <li><a>Open</a></li>
     <li><a>Item 2</a></li>
   </ul>
   <!--
@@ -35,12 +49,16 @@
   ></div>
 >-->
   <input
+    bind:value={apiKey}
     type="password"
     class="input"
     required
     placeholder="Enter an API Key"
+    onsubmit={() => {
+      checkKey();
+    }}
   />
-  <input type="submit" class="btn" value="Check" />
+  <button class="btn" disabled={!apiKey} onclick={checkKey}>Check</button>
   <!--
   <button
     class="bg-blue-700 text-white p-2 rounded-md cursor-pointer hover:bg-blue-600/70"
