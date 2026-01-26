@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import InputText from '../components/InputText.svelte';
+import LLMs from '../components/LLMs.svelte';
 
 let loading = true;
 const num = 1;
@@ -12,12 +13,9 @@ function showload(){
 ---
 
 <Layout>
-  <div class="w-full bg-red-300">
-    <InputText client:visible num={num} customEvt={showload} />
+  <div class="w-full h-full">
+    <LLMs client:visible />
   </div>
-  {loading && 
-  <div class="bg-yellow-700 p-3 flex flex-1 h-full justify-center items-center">no connection</div>
-  }
 </Layout>
 
 

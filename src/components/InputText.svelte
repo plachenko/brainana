@@ -14,8 +14,7 @@
   async function checkKey() {
     console.log("checking key", apiKey);
     // connect(apiKey);
-    // customEvt();
-    console.log(customEvt);
+    customEvt();
   }
 
   onMount(() => {
@@ -51,12 +50,9 @@
   <input
     bind:value={apiKey}
     type="password"
-    class="input"
+    class="input flex-1"
     required
     placeholder="Enter an API Key"
-    onsubmit={() => {
-      checkKey();
-    }}
   />
   <button class="btn" disabled={!apiKey} onclick={checkKey}>Check</button>
   <!--
